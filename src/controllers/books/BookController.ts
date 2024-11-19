@@ -11,7 +11,8 @@ export async function getTempData(
 	req: Request,
 	res: Response
 ): Promise<Response> {
-	const tempDataResponse = await BookService.getAllTempData();
+	const filterQuery = checkFilteringQueryV2(req);
+	const tempDataResponse = await BookService.getAllTempData(filterQuery);
 
 	if (!tempDataResponse.status)
 		return handleServiceErrorWithResponse(res, tempDataResponse);

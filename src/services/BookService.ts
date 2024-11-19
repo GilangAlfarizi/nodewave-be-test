@@ -6,6 +6,7 @@ import Logger from "$pkg/logger";
 import { PrismaClient } from "@prisma/client";
 import * as xlsx from "xlsx";
 import { buildFilterQueryLimitOffsetV2 } from "./helpers/FilterQueryV2";
+import { FilteringQueryV2 } from "$entities/Query";
 
 const prisma = new PrismaClient();
 
@@ -44,6 +45,7 @@ export async function createBooks(): Promise<ServiceResponse<any>> {
 	try {
 		const bookTempDatas = await prisma.tempBook.findMany();
 
+		console.log(bookTempDatas);
 		let createdDatas = [];
 		for (const bookTempData of bookTempDatas) {
 			const checkExist = await prisma.book.findFirst({
@@ -63,14 +65,17 @@ export async function createBooks(): Promise<ServiceResponse<any>> {
 			data: createdDatas,
 		};
 	} catch (err) {
-		Logger.error(`BookService.post.importTempBook : ${err}`);
+		Logger.error(`BookService.post.createBooks : ${err}`);
 		return INTERNAL_SERVER_ERROR_SERVICE_RESPONSE;
 	}
 }
 
-export async function getAllTempData(): Promise<ServiceResponse<{}>> {
+export async function getAllTempData(
+	filterQuery: FilteringQueryV2
+): Promise<ServiceResponse<{}>> {
 	try {
-		const tempDatas = await prisma.tempBook.findMany();
+		const filter = buildFilterQueryLimitOffsetV2(filterQuery);
+		const tempDatas = await prisma.tempBook.findMany(filter);
 
 		return {
 			status: true,
