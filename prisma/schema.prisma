@@ -11,3 +11,34 @@ datasource db {
 }
 
 // Declare schemas here
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String?
+  password String
+  role     Roles   @default(USER)
+}
+
+enum Roles {
+  ADMIN
+  USER
+}
+
+model Book {
+  id        Int     @id @default(autoincrement())
+  name      String
+  author    String?
+  publisher String?
+
+  @@map("books")
+}
+
+model TempBook {
+  id        Int     @id @default(autoincrement())
+  name      String
+  author    String?
+  publisher String?
+
+  @@map("temp_books")
+}

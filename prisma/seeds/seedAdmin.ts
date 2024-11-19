@@ -10,7 +10,7 @@ export async function seedAdmin(prisma:PrismaClient){
     
         await prisma.user.create({
             data:{
-                fullName:"Admin",
+                name:"Admin",
                 password : hashedPassword,
                 email:"admin@test.com",
                 role :Roles.ADMIN
